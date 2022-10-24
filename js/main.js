@@ -20,27 +20,14 @@ d3.csv("data/iris.csv").then((data) => {
   });
 
 
-  const MAX_SEPAL_WIDTH = d3.max(data, (d) => {
-    return parseFloat(d.Sepal_Width);
-  });
-
   const MAX_PETAL_LENGTH = d3.max(data, (d) => {
     return parseFloat(d.Petal_Length);
   });
 
 
-  const MAX_PETAL_WIDTH = d3.max(data, (d) => {
-    return parseFloat(d.Petal_Width);
-  });
-
-  console.log("Sepal: " + MAX_SEPAL_LENGTH)
-  // console.log(MAX_SEPAL_WIDTH)
-  console.log("Petal: " + MAX_PETAL_LENGTH)
-  // console.log(MAX_PETAL_WIDTH)
-
   const SEPAL_SCALE_X = d3.scaleLinear()
-  .domain([0, MAX_SEPAL_LENGTH])
-  .range([0, VIS_WIDTH])
+    .domain([0, MAX_SEPAL_LENGTH])
+    .range([0, VIS_WIDTH])
 
   const PETAL_SCALE_Y = d3.scaleLinear()
     .domain([0, MAX_PETAL_LENGTH])
@@ -59,6 +46,26 @@ d3.csv("data/iris.csv").then((data) => {
       + MARGINS.top + ")")
     .call(d3.axisLeft(PETAL_SCALE_Y).ticks(15))
     .attr("font-size", "10px");
+
+
+
+  FRAME1.selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cx", (d) => { return SEPAL_SCALE_X(d.Sepal_Length) + PADDING; })
+    .attr("cy", (d) => { return PETAL_SCALE_Y(d.Petal_Length) + PADDING; })
+    .attr("r", 2)
+    .attr("class", "point")
+    .style("fill", function (d) {
+      if (d.Species == "virginica") {
+        return "LightSkyBlue";
+      } else if (d.Species == "versicolor") {
+        return "LightSalmon";
+      } else {
+        return "LightGreen";
+      }
+    })
 
 
 })
