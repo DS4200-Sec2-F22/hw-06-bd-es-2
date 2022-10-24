@@ -1,0 +1,31 @@
+body {
+  font-family: Arial;
+  
+}
+
+h1 {
+  text-align: center;
+}
+
+.columns {
+  display: flex; 
+  justify-content: space-between;
+}
+
+
+#column1 {
+  background-color: red;
+  display:block;
+  
+}
+
+
+#column2 {
+  background-color: orange;
+  
+}
+
+#column3 {
+  background-color: blue;
+  
+}
