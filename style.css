@@ -16,15 +16,6 @@ h2 {
   justify-content: space-between;
 }
 
-
-#column1 {
-}
-
-
-#column2 {
-  
-}
-
-#column3 {
-  
+.point {
+  opacity: 50%;
 }
