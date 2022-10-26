@@ -156,18 +156,21 @@ d3.csv("data/iris.csv").then((data) => {
 
   // Bars
 
-  const array = [100,200,300]
+  const CATEGORIES = {'setosa': 313, 'versicolor': 213}
 
   FRAME3.selectAll("bars")
     .data(data)
     .enter()
     .append("rect")
-    .attr("x", array.map(function (d) { return d }))
+    .attr("x", function (d) {return CATEGORIES[d.Species]})
     .attr("width", 25)
     .attr("height", VIS_HEIGHT)
     .attr("fill", "black")
 
 })
+
+
+
 
 
 
