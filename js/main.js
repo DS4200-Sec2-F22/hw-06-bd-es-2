@@ -65,7 +65,7 @@ d3.csv("data/iris.csv").then((data) => {
   .attr("font-size", "10px");
   
   
-  FRAME1.selectAll("circle")
+  const points1 = FRAME1.selectAll("circle")
   .data(data)
   .enter()
   .append("circle")
@@ -83,6 +83,24 @@ d3.csv("data/iris.csv").then((data) => {
       return "LightGreen";
     }
   })
+
+  FRAME1
+  .call( d3.brush()                
+  .extent( [ [0,0], [VIS_WIDTH,VIS_HEIGHT] ] ) 
+  .on("start brush", updateChart1))
+  
+  function updateChart1() {
+    extent = d3.event.selection
+    points1.classed("selected", function(d){ return isBrushed(extent, x(d.Sepal_Length), y(d.Petal_Length) ) } )
+  }
+  
+  function isBrushed(brush_coords, cx, cy) {
+    var x0 = brush_coords[0][0],
+    x1 = brush_coords[1][0],
+    y0 = brush_coords[0][1],
+    y1 = brush_coords[1][1];
+    return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;    // This return TRUE or FALSE depending on if the points is in the selected area
+  }
   
   
   const FRAME2 = d3.select("#column2")
@@ -105,7 +123,7 @@ d3.csv("data/iris.csv").then((data) => {
   .call(d3.axisLeft(PETAL_WIDTH_SCALE).ticks(8))
   .attr("font-size", "10px");
   
-  FRAME2.selectAll("circle")
+  const points2 = FRAME2.selectAll("circle")
   .data(data)
   .enter()
   .append("circle")
@@ -123,6 +141,16 @@ d3.csv("data/iris.csv").then((data) => {
       return "LightGreen";
     }
   })
+
+  FRAME2
+  .call( d3.brush()                
+  .extent( [ [0,0], [VIS_WIDTH,VIS_HEIGHT] ] ) 
+  .on("start brush", updateChart2))
+  
+  function updateChart2() {
+    extent = d3.event.selection
+    points1.classed("selected", function(d){ return isBrushed(extent, x(d.Sepal_Length), y(d.Petal_Length) ) } )
+  }
   
   const FRAME3 = d3.select("#column3")
   .append("svg")
@@ -168,26 +196,7 @@ d3.csv("data/iris.csv").then((data) => {
     .attr("height", VIS_HEIGHT)
     .attr("class", CATEGORIES[i])
   }
-  
-  FRAME3
-  .call( d3.brush()                
-  .extent( [ [0,0], [VIS_WIDTH,VIS_HEIGHT] ] ) 
-  .on("start brush", updateChart))
 
-function updateChart() {
-  extent = d3.event.selection
-  point.classed("selected", function(d){ return isBrushed(extent, x(d.Sepal_Length), y(d.Petal_Length) ) } )
-  }
-
-  function isBrushed(brush_coords, cx, cy) {
-    var x0 = brush_coords[0][0],
-        x1 = brush_coords[1][0],
-        y0 = brush_coords[0][1],
-        y1 = brush_coords[1][1];
-   return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;    // This return TRUE or FALSE depending on if the points is in the selected area
-}
-  
-  
 })
 
 
