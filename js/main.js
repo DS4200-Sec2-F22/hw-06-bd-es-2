@@ -83,10 +83,10 @@ d3.csv("data/iris.csv").then((data) => {
       return "LightGreen";
     }
   })
-
+  
   FRAME1
   .call( d3.brush()                
-  .extent( [ [0,0], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
+  .extent( [ [PADDING,PADDING], [FRAME_WIDTH - PADDING + 5, FRAME_HEIGHT - PADDING] ] ) 
   .on("start brush", updateChart1))
   
   function updateChart1() {
@@ -95,10 +95,12 @@ d3.csv("data/iris.csv").then((data) => {
   }
   
   function isBrushed(brush_coords, cx, cy) {
-    var x0 = brush_coords[0][0],
-    x1 = brush_coords[1][0],
-    y0 = brush_coords[0][1],
-    y1 = brush_coords[1][1];
+    const x0 = brush_coords[0][0]
+    const x1 = brush_coords[1][0]
+    const y0 = brush_coords[0][1]
+    const y1 = brush_coords[1][1]
+
+    console.log(x0)
     return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;    // This return TRUE or FALSE depending on if the points is in the selected area
   }
   
@@ -141,10 +143,10 @@ d3.csv("data/iris.csv").then((data) => {
       return "LightGreen";
     }
   })
-
+  
   FRAME2
   .call( d3.brush()                
-  .extent( [ [0,0], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
+  .extent([[PADDING, PADDING], [FRAME_WIDTH - PADDING + 5, FRAME_HEIGHT - PADDING]]) 
   .on("start brush", updateChart2))
   
   function updateChart2() {
@@ -188,7 +190,7 @@ d3.csv("data/iris.csv").then((data) => {
   const CATEGORIES = { 0: "setosa", 1: "versicolor", 2: "virginica" }
   
   
- for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 3; i++) {
     FRAME3.append("rect")
     .attr("x", ((i+1) * 100) - 12.5)
     .attr("y", 50)
@@ -196,7 +198,5 @@ d3.csv("data/iris.csv").then((data) => {
     .attr("height", VIS_HEIGHT)
     .attr("class", CATEGORIES[i])
   }
-
+  
 })
-
-
