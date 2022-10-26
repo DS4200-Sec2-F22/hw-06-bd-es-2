@@ -84,14 +84,22 @@ d3.csv("data/iris.csv").then((data) => {
     }
   })
 
+  const selectedPoints = [];
+
   FRAME1
   .call( d3.brush()                
-  .extent( [ [0,0], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
+  .extent( [ [PADDING,PADDING], [FRAME_WIDTH, FRAME_HEIGHT - PADDING] ] ) 
   .on("start brush", updateChart1))
+  .on("start brush", addPoints)
   
   function updateChart1() {
-    extent = d3.event.selection
-    points1.classed("selected", function(d){ return isBrushed(extent, x(d.Sepal_Length), y(d.Petal_Length) ) } )
+  extent = d3.event.selection
+  points1.classed("selected", function(d) { return isBrushed(extent, x(d.Sepal_Length), y(d.Petal_Length) ) }
+  )}
+
+  function addPoints() {
+    selectedPoints.push(function(d) { return isBrushed(extent, x(d.Sepal_Length), y(d.Petal_Length) ) })
+    console.log(selectedPoints);
   }
   
   function isBrushed(brush_coords, cx, cy) {
@@ -144,12 +152,12 @@ d3.csv("data/iris.csv").then((data) => {
 
   FRAME2
   .call( d3.brush()                
-  .extent( [ [0,0], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
+  .extent( [ [PADDING,PADDING], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
   .on("start brush", updateChart2))
   
   function updateChart2() {
     extent = d3.event.selection
-    points1.classed("selected", function(d){ return isBrushed(extent, x(d.Sepal_Length), y(d.Petal_Length) ) } )
+    points2.classed("selected", function(d){ return isBrushed(extent, x(d.Sepal_Length), y(d.Petal_Length) ) } )
   }
   
   const FRAME3 = d3.select("#column3")
