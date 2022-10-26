@@ -197,19 +197,6 @@ d3.csv("data/iris.csv").then((data) => {
     .attr("class", CATEGORIES[i])
   }
 
-  FRAME3
-  .call( d3.brush()                
-  .extent( [ [0,0], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
-  .on("start brush", updateChart3))
-
-  function updateChart3 {
-    extent = d3.event.selection
-    bars.classed("selected", function (d) { return })
-  }
-
 })
-
-
-
 
 
