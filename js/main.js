@@ -86,7 +86,7 @@ d3.csv("data/iris.csv").then((data) => {
 
   FRAME1
   .call( d3.brush()                
-  .extent( [ [0,0], [VIS_WIDTH,VIS_HEIGHT] ] ) 
+  .extent( [ [0,0], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
   .on("start brush", updateChart1))
   
   function updateChart1() {
@@ -144,7 +144,7 @@ d3.csv("data/iris.csv").then((data) => {
 
   FRAME2
   .call( d3.brush()                
-  .extent( [ [0,0], [VIS_WIDTH,VIS_HEIGHT] ] ) 
+  .extent( [ [0,0], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
   .on("start brush", updateChart2))
   
   function updateChart2() {
@@ -188,13 +188,23 @@ d3.csv("data/iris.csv").then((data) => {
   const CATEGORIES = { 0: "setosa", 1: "versicolor", 2: "virginica" }
   
   
-  for (let i = 0; i < 3; i++) {
+ for (let i = 0; i < 3; i++) {
     FRAME3.append("rect")
     .attr("x", ((i+1) * 100) - 12.5)
     .attr("y", 50)
     .attr("width", 75)
     .attr("height", VIS_HEIGHT)
     .attr("class", CATEGORIES[i])
+  }
+
+  FRAME3
+  .call( d3.brush()                
+  .extent( [ [0,0], [FRAME_WIDTH, FRAME_HEIGHT] ] ) 
+  .on("start brush", updateChart3))
+
+  function updateChart3 {
+    extent = d3.event.selection
+    bars.classed("selected", function (d) { return })
   }
 
 })
