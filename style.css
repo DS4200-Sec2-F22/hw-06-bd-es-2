@@ -36,6 +36,6 @@ h2 {
   opacity: 50%;
 }
 
-.selected {
-  border-width: 2px;
+.selection {
+  stroke-width: 5px;
 }
