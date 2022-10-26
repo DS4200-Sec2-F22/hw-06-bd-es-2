@@ -73,6 +73,7 @@ d3.csv("data/iris.csv").then((data) => {
     .attr("cy", (d) => { return PETAL_LENGTH_SCALE(d.Petal_Length) + PADDING; })
     .attr("r", 2)
     .attr("class", "point")
+    .attr("id", (d) => {return d.id})
     .style("fill", function (d) {
       if (d.Species == "virginica") {
         return "LightSkyBlue";
@@ -112,6 +113,7 @@ d3.csv("data/iris.csv").then((data) => {
     .attr("cy", (d) => { return PETAL_WIDTH_SCALE(d.Petal_Width) + PADDING; })
     .attr("r", 2)
     .attr("class", "point")
+    .attr("id", (d) => { return d.id })
     .style("fill", function (d) {
       if (d.Species == "virginica") {
         return "LightSkyBlue";
@@ -166,6 +168,26 @@ d3.csv("data/iris.csv").then((data) => {
       .attr("height", VIS_HEIGHT)
       .attr("class", CATEGORIES[i])
   }
+
+  brush = d3.brush()
+    .extent([
+      [d3.min(xScaleScatter.range()), d3.min(yScaleScatter.range())],
+      [d3.max(xScaleScatter.range()), d3.max(yScaleScatter.range())]
+    ])
+    .on("brush end", (event) => {
+      if (event.selection === null) {
+      brushedCountries = [];
+      } else {
+        const [[x0, y0], [x1, y1]] = event.selection;
+      brushedCountries = gapminderData.filter(d => d.year === year)
+          .filter(d => {
+            return x0 <= xScaleScatter(d.fertility) &&
+              x1 >= xScaleScatter(d.fertility) &&
+              y0 <= yScaleScatter(d.life_expect) &&
+              y1 >= yScaleScatter(d.life_expect);
+          }).map(d => d.country);
+      }
+    })
 
 
 })
