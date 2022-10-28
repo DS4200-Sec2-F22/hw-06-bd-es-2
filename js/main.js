@@ -1,3 +1,7 @@
+// JS Code for DS4200 hw-06
+// Brady Duncan and Evan Suslovich
+// Last Modifid: 10/28/2002
+
 // constants
 const FRAME_HEIGHT = 450;
 const FRAME_WIDTH = 450;
