@@ -37,5 +37,6 @@ h2 {
 }
 
 .selection {
+  border-style: solid;
   stroke-width: 5px;
 }

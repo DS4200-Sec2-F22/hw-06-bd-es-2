@@ -3,6 +3,7 @@ const FRAME_WIDTH = 450;
 const MARGINS = { left: 50, right: 50, top: 50, bottom: 50 };
 const SCALE = 50;
 const PADDING = 50;
+const r = 3.5
 
 VIS_HEIGHT = FRAME_HEIGHT - MARGINS.top - MARGINS.bottom
 VIS_WIDTH = FRAME_WIDTH - MARGINS.left - MARGINS.right
@@ -71,7 +72,7 @@ d3.csv("data/iris.csv").then((data) => {
   .append("circle")
   .attr("cx", (d) => { return SEPAL_LENGTH_SCALE(d.Sepal_Length) + PADDING; })
   .attr("cy", (d) => { return PETAL_LENGTH_SCALE(d.Petal_Length) + PADDING; })
-  .attr("r", 2)
+  .attr("r", r)
   .attr("class", "point")
   .attr("id", (d) => {return d.id})
   .style("fill", function (d) {
@@ -110,7 +111,7 @@ d3.csv("data/iris.csv").then((data) => {
   .append("circle")
   .attr("cx", (d) => { return SEPAL_WIDTH_SCALE(d.Sepal_Width) + PADDING; })
   .attr("cy", (d) => { return PETAL_WIDTH_SCALE(d.Petal_Width) + PADDING; })
-  .attr("r", 2)
+  .attr("r", r)
   .attr("class", "point")
   .attr("id", (d) => { return d.id })
   .style("fill", function (d) {
@@ -123,21 +124,27 @@ d3.csv("data/iris.csv").then((data) => {
     }
   })
   
-  const selectedPoints = [];
+  // global list of selected points
+  let selectedPoints = [];
   
+  // brush function
   FRAME2
   .call( d3.brush()                
   .extent( [ [PADDING,PADDING], [FRAME_WIDTH, FRAME_HEIGHT - PADDING] ] ) 
   .on("start brush", updateChart))
   .on("end brush", changePoints)
   
+  // updates brushed points
   function updateChart(event) {
     console.log(event)
     extent = event.selection
     points.classed("selected", function(d) { return isBrushed(extent, SEPAL_LENGTH_SCALE(d.Sepal_Length), PETAL_LENGTH_SCALE(d.Petal_Length) ) },
-    selectedPoints.push(event.selection.id)
+    selectedPoints.push(extent)
     )}
-    
+
+    console.log(selectedPoints)
+
+    // confirms whether a point is brushed or not
     function isBrushed(brush_coords, cx, cy) {
       var x0 = brush_coords[0][0],
       x1 = brush_coords[1][0],
@@ -156,42 +163,42 @@ d3.csv("data/iris.csv").then((data) => {
       }
     }
     
+    // set up frame 3
     const FRAME3 = d3.select("#column3")
     .append("svg")
     .attr("height", FRAME_HEIGHT)
     .attr("width", FRAME_WIDTH)
     .attr("class", "frame");
     
+    // axis labels
     const FRAME3_X_AXIS = ["Setosa", "Versicolor", "Virginica"]
     
+    // set up scale and x axis for graph 3
     const X_AXIS = d3.scaleBand()
     .range([0, VIS_WIDTH])
     .domain(FRAME3_X_AXIS.map(function (d) { return d }))
     .padding(0.5);
-    
     
     FRAME3.append("g")
     .attr("transform", "translate(" + PADDING + ","
     + (VIS_HEIGHT + MARGINS.top) + ")")
     .call(d3.axisBottom(X_AXIS))
     
+    // set up scale and y axis for graph 3
     const Y_AXIS = d3.scaleLinear()
     .domain([0, 50])
     .range([VIS_HEIGHT, 0])
     
-    // add y axis to the second graph
     FRAME3.append("g")
     .attr("transform", "translate(" + PADDING + ","
     + MARGINS.top + ")")
     .call(d3.axisLeft(Y_AXIS).ticks(12))
     .attr("font-size", "8px");
     
-    
-    
-    // Bars
+    // categories
     const CATEGORIES = { 0: "setosa", 1: "versicolor", 2: "virginica" }
     
-    
+    // plot bars
     for (let i = 0; i < 3; i++) {
       FRAME3.append("rect")
       .attr("x", ((i+1) * 100) - 12.5)
