@@ -36,7 +36,7 @@ h2 {
   opacity: 50%;
 }
 
-.selection {
+.selected {
   border-style: solid;
   stroke-width: 5px;
 }
