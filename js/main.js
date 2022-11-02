@@ -19,6 +19,26 @@ const FRAME1 = d3.select("#column1")
                 .attr("width", FRAME_WIDTH)
                 .attr("class", "frame");
 
+// set up frame 2
+const FRAME2 = d3.select("#column2")
+                .append("svg")
+                .attr("height", FRAME_HEIGHT)
+                .attr("width", FRAME_WIDTH)
+                .attr("class", "frame");
+
+      
+// set up frame 3
+const FRAME3 = d3.select("#column3")
+                .append("svg")
+                .attr("height", FRAME_HEIGHT)
+                .attr("width", FRAME_WIDTH)
+                .attr("class", "frame");
+
+// initialize variables for graphs
+let points1;
+let points2;
+let bar;
+
 // access the data from the csv file
 d3.csv("data/iris.csv").then((data) => {
   
@@ -71,7 +91,7 @@ d3.csv("data/iris.csv").then((data) => {
         .attr("font-size", "10px");
   
   // plot the points on the first frame
-  let frame1Points = FRAME1.selectAll("circle")
+  points1 = FRAME1.selectAll("circle")
                   .data(data)
                   .enter()
                   .append("circle")
@@ -90,13 +110,6 @@ d3.csv("data/iris.csv").then((data) => {
                     }
                   })
   
-  // create second frame
-  const FRAME2 = d3.select("#column2")
-                  .append("svg")
-                  .attr("height", FRAME_HEIGHT)
-                  .attr("width", FRAME_WIDTH)
-                  .attr("class", "frame");
-  
   // add x axis to the second graph
   FRAME2.append("g")
         .attr("transform", "translate(" + PADDING + ","
@@ -112,7 +125,7 @@ d3.csv("data/iris.csv").then((data) => {
         .attr("font-size", "10px");
   
   // plot the points on the second scatter plot
-  let points = FRAME2.selectAll("circle")
+  points2 = FRAME2.selectAll("circle")
             .data(data)
             .enter()
             .append("circle")
@@ -131,43 +144,55 @@ d3.csv("data/iris.csv").then((data) => {
               }
            })
   
-  // brush function
-  FRAME2.call( d3.brush()                
-              .extent([[PADDING,PADDING], 
-                [FRAME_WIDTH, FRAME_HEIGHT - PADDING]]) 
-                .on("start brush", updateChart));
+  // // brush function
+  // FRAME2.call( d3.brush()                
+  //             .extent([[PADDING,PADDING], 
+  //               [FRAME_WIDTH, FRAME_HEIGHT - PADDING]]) 
+  //               .on("start brush", updateChart));
     
-  // updates brushed points
+  // update the charts when the middle chart's points are brushed
   function updateChart(event) {
-    let extent = event.selection
-    points.classed("selected", function(d) { return isBrushed(extent, 
-                                                              SEPAL_LENGTH_SCALE(d.Sepal_Length), 
-                                                              PETAL_LENGTH_SCALE(d.Petal_Length) ); } )                                                          
-    
+
+    // initialize event selection and empty array
+    let extent = event.selection;
     let selectedSpecies = [];
-      
-    // reset selected points 
-    if (extent == null) {
-      points.classed('selected', false);
-      bar.classed('selected', false);
-      frame1Points.classed("selected", false);
-    }
-    // points are brushed - add selected points to the selectedSpecies list
-    else {
-      isSelected = isBrushed(extent,
-                             function (d) {SEPAL_WIDTH_SCALE(d.Sepal_Width), 
-                                           PETAL_WIDTH_SCALE(d.Petal_Width)});
-      if (isSelected) {
-        selectedSpecies.add(d.Species);
+
+    // if points in the middle scatter plot are brushed, assign them to the 
+    // selected class and add the species to the array
+    points2.classed("selected", function(d) { 
+
+      console.log(extent);
+      let brushed = isBrushed(extent, 
+                              SEPAL_LENGTH_SCALE(d.Sepal_Length),  
+                              PETAL_LENGTH_SCALE(d.Petal_Length));
+
+      if (brushed) {
+        selectedSpecies.push(d.Species);
       }
-      return isSelected;}
-          
-    //adds selected class to bar and first frame
-    bar.classed("selected", (d) => {return selectedSpecies.has(d.Species);})
-    frame1Points.classed("selected", (d) => {return selectedSpecies.has(function (d) {
-      return d;
-      });
-    })
+
+      return brushed;
+      } )    
+                                                                
+  //   // if points in the middle scatter plot are brushed, assign the same points
+  //   // in the left scatter to the selected class and add the species to the array                                                            
+  //   points1.classed("selected", function(d) { 
+      
+  //     let brushed = isBrushed(extent, 
+  //                             SEPAL_WIDTH_SCALE(d.Sepal_Width) + PADDING, 
+  //                             PETAL_WIDTH_SCALE(d.Petal_Width) + PADDING ); 
+
+  //     if (brushed) {
+  //       selectedSpecies.push(d.Species);
+  //     } 
+
+  //     return brushed;
+  //   } ) 
+
+  //   // if the points in the middle scatter plot are brushed, assign the corresponding
+  //   // bar in the bar plot to the selected class
+  //   bar.classed("selected", function(d) {
+  //     return selectedSpecies.includes(d.Species);
+  //   })
   }
         
   // confirms whether a point is brushed or not
@@ -178,13 +203,6 @@ d3.csv("data/iris.csv").then((data) => {
           y1 = brush_coords[1][1];
     return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1  ;  // This return TRUE or FALSE depending on if the points is in the selected area
   }
-      
-  // set up frame 3
-  const FRAME3 = d3.select("#column3")
-                  .append("svg")
-                  .attr("height", FRAME_HEIGHT)
-                  .attr("width", FRAME_WIDTH)
-                  .attr("class", "frame");
   
   // axis labels
   const FRAME3_X_AXIS = ["Setosa", "Versicolor", "Virginica"];
@@ -212,13 +230,12 @@ d3.csv("data/iris.csv").then((data) => {
         .attr("font-size", "8px");
   
   // object for the data to be used in the bar
-  
   const barData = [{Species: "virginica", Location: 87.5}, 
                    {Species: "versicolor", Location: 187.5}, 
                    {Species: "setosa", Location: 287.5}];
                   
   // plot the bar data 
-  let bar = FRAME3.selectAll("bar")
+  bar = FRAME3.selectAll("bar")
           .data(barData)
           .enter()
           .append("rect")
@@ -228,6 +245,4 @@ d3.csv("data/iris.csv").then((data) => {
           .attr("width", 75)
           .attr("class", function (d) {return d.Species;});
   
-})
-
-
+  })
