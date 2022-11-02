@@ -139,10 +139,10 @@ d3.csv("data/iris.csv").then((data) => {
     
   // updates brushed points
   function updateChart(event) {
-    extent = event.selection
+    let extent = event.selection
     points.classed("selected", function(d) { return isBrushed(extent, 
                                                               SEPAL_LENGTH_SCALE(d.Sepal_Length), 
-                                                              PETAL_LENGTH_SCALE(d.Petal_Length) ); } )
+                                                              PETAL_LENGTH_SCALE(d.Petal_Length) ); } )                                                          
     
     let selectedSpecies = [];
       
